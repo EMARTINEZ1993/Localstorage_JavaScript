@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de LocalStorage en JavaScript</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<header>
+    <h1>LocalStorage en JavaScript</h1>
+    <p>
+        Guía práctica para aprender a almacenar, consultar,
+        actualizar y eliminar información utilizando HTML,
+        JavaScript y el DOM.
+    </p>
+</header>
+
+
+<main>
+
+<section id="introduccion">
+
+    <h2>1. ¿Qué es LocalStorage?</h2>
+
+    <p>
+        LocalStorage es una funcionalidad del navegador que
+        permite almacenar información de manera local.
+        Los datos permanecen guardados incluso cuando
+        cerramos o actualizamos la página.
+    </p>
+
+    <h3>¿Para qué sirve?</h3>
+
+    <ul>
+        <li>Guardar información de usuarios.</li>
+        <li>Almacenar productos de un inventario.</li>
+        <li>Conservar registros de formularios.</li>
+        <li>Guardar preferencias del usuario.</li>
+        <li>Crear aplicaciones sencillas sin utilizar bases de datos.</li>
+    </ul>
+
+    <div class="nota">
+        <strong>Importante:</strong>
+        LocalStorage almacena información en el navegador.
+        No necesita una conexión a una base de datos ni a un servidor.
+    </div>
+
+    <h3>Variable tradicional vs LocalStorage</h3>
+
+    <table>
+        <tr>
+            <th>Variable JavaScript</th>
+            <th>LocalStorage</th>
+        </tr>
+        <tr>
+            <td>Guarda información temporalmente en memoria.</td>
+            <td>Conserva información en el navegador.</td>
+        </tr>
+        <tr>
+            <td>Normalmente pierde su valor al recargar la página.</td>
+            <td>Mantiene los datos después de recargar.</td>
+        </tr>
+        <tr>
+            <td>Se utiliza directamente en JavaScript.</td>
+            <td>Se utiliza mediante sus métodos.</td>
+        </tr>
+    </table>
+
+    <div class="alerta">
+        LocalStorage no es una base de datos segura.
+        No debemos guardar contraseñas, tokens ni información sensible.
+    </div>
+
+</section>
+
+<section id="ubicacion">
+
+    <h2>2. ¿Dónde se guarda la información?</h2>
+
+    <p>
+        La información se almacena dentro del navegador
+        que estamos utilizando.
+    </p>
+
+    <h3>¿Cómo consultar los datos guardados?</h3>
+
+    <ol>
+        <li>Abre el proyecto en Google Chrome o Edge.</li>
+        <li>Presiona la tecla F12.</li>
+        <li>Selecciona la pestaña Application (Aplicación).</li>
+        <li>Busca Storage y selecciona Local Storage.</li>
+        <li>Selecciona el origen de tu página.</li>
+        <li>Observa las columnas Key y Value.</li>
+    </ol>
+
+    <div class="nota">
+        También puedes acceder a las herramientas de desarrollador
+        haciendo clic derecho sobre la página y seleccionando
+        Inspeccionar.
+    </div>
+
+    <p>
+        Cada registro se almacena mediante una clave y un valor.
+        Por ejemplo:
+    </p>
+
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>nombre</td>
+            <td>Carlos</td>
+        </tr>
+        <tr>
+            <td>ciudad</td>
+            <td>Medellín</td>
+        </tr>
+    </table>
+
+</section>
+
+
+<section id="metodos">
+    <h2>3. Ejercicios independientes con LocalStorage</h2>
+    <p>En esta guía construirás cuatro ejercicios pequeños para trabajar con un solo dato de texto. Cada operación tiene su propio formulario y su propio bloque de código.</p>
+
+    <h3>3.1. Crear la carpeta del proyecto</h3>
+    <p>Crea la carpeta <code>localstorage_explicacion</code> y dentro agrega estos dos archivos:</p>
+    <pre><code>localstorage_explicacion/
+├── index.html
+└── app.js</code></pre>
+
+    <h3>3.2. Crear los formularios en index.html</h3>
+    <p>Escribe el HTML siguiente en <code>localstorage_explicacion/index.html</code>. Cada ejercicio está separado y cada campo de entrada está dentro de su formulario.</p>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Ejercicios independientes de LocalStorage&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Ejercicios de LocalStorage&lt;/h1&gt;
+
+    &lt;section&gt;
+        &lt;h2&gt;Ejercicio 1. Guardar un nombre&lt;/h2&gt;
+        &lt;form id="formGuardar"&gt;
+            &lt;label for="nombreGuardar"&gt;Nombre:&lt;/label&gt;
+            &lt;input id="nombreGuardar" type="text"&gt;
+            &lt;button type="submit"&gt;Guardar nombre&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;p id="resultadoGuardar"&gt;&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;script src="app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    <h3>3.3. Preparar app.js</h3>
+    <p>En <code>localstorage_explicacion/app.js</code>, define una clave y conecta cada formulario, campo y mensaje con JavaScript.</p>
+    <pre><code>const claveNombre = "localstorage_explicacion_nombre";
+
+const formGuardar = document.getElementById("formGuardar");
+const nombreGuardar = document.getElementById("nombreGuardar");
+const resultadoGuardar = document.getElementById("resultadoGuardar");</code></pre>
+    <p>La misma clave se utiliza en los cuatro ejercicios para que consultar, editar y eliminar operen sobre el dato guardado.</p>
+
+    <h3>3.4. Ejercicio 1: guardar un campo</h3>
+    <p>Conecta el primer formulario al evento <code>submit</code>. <code>setItem()</code> guarda el texto usando la clave definida anteriormente.</p>
+    <pre><code>formGuardar.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+
+    const nombre = nombreGuardar.value.trim();
+    if (nombre === "") {
+        resultadoGuardar.textContent = "Escribe un nombre antes de guardarlo.";
+        return;
+    }
+
+    localStorage.setItem(claveNombre, nombre);
+    resultadoGuardar.textContent = "Nombre guardado correctamente.";
+    formGuardar.reset();
+});</code></pre>
+    <p><code>preventDefault()</code> evita que el formulario recargue la página. <code>trim()</code> quita espacios al inicio y al final.</p>
+
+    <h3>3.5. Ejercicio 2: mostrar el campo guardado</h3>
+    <p>Agrega este segundo formulario a <code>index.html</code>. No necesita un campo de entrada: solo contiene el botón que solicitará el nombre guardado.</p>
+    <pre><code>    &lt;section&gt;
+        &lt;h2&gt;Ejercicio 2. Mostrar el nombre guardado&lt;/h2&gt;
+        &lt;form id="formMostrar"&gt;
+            &lt;button type="submit"&gt;Mostrar nombre&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;p id="resultadoMostrar"&gt;&lt;/p&gt;
+    &lt;/section&gt;</code></pre>
+
+    <p>Ahora agrega en <code>app.js</code> el evento que consulta la clave con <code>getItem()</code> y coloca el resultado en el párrafo.</p>
+    <pre><code>const formMostrar = document.getElementById("formMostrar");
+const resultadoMostrar = document.getElementById("resultadoMostrar");
+
+formMostrar.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+
+    const nombreGuardado = localStorage.getItem(claveNombre);
+    resultadoMostrar.textContent = nombreGuardado === null
+        ? "No hay un nombre guardado."
+        : "Nombre guardado: " + nombreGuardado;
+});</code></pre>
+    <p>Si la clave no existe, <code>getItem()</code> devuelve <code>null</code>; por eso se comprueba antes de mostrar el resultado.</p>
+
+    <h3>3.6. Ejercicio 3: editar el campo guardado</h3>
+    <p>Agrega a <code>index.html</code> un tercer formulario con un campo para escribir el nuevo nombre. Mantén el campo dentro del formulario.</p>
+    <pre><code>    &lt;section&gt;
+        &lt;h2&gt;Ejercicio 3. Editar el nombre guardado&lt;/h2&gt;
+        &lt;form id="formEditar"&gt;
+            &lt;label for="nombreEditar"&gt;Nuevo nombre:&lt;/label&gt;
+            &lt;input id="nombreEditar" type="text"&gt;
+            &lt;button type="submit"&gt;Actualizar nombre&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;p id="resultadoEditar"&gt;&lt;/p&gt;
+    &lt;/section&gt;</code></pre>
+    <p>Después conecta el envío en <code>app.js</code>. Guardar con la misma clave actualiza el valor anterior; no se necesita un método <code>update()</code>.</p>
+    <pre><code>const formEditar = document.getElementById("formEditar");
+const nombreEditar = document.getElementById("nombreEditar");
+const resultadoEditar = document.getElementById("resultadoEditar");
+
+formEditar.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+
+    const nuevoNombre = nombreEditar.value.trim();
+    if (nuevoNombre === "") {
+        resultadoEditar.textContent = "Escribe el nuevo nombre.";
+        return;
+    }
+
+    localStorage.setItem(claveNombre, nuevoNombre);
+    resultadoEditar.textContent = "Nombre actualizado correctamente.";
+    formEditar.reset();
+});</code></pre>
+
+    <h3>3.7. Ejercicio 4: eliminar el campo guardado</h3>
+    <p>Agrega el cuarto formulario en <code>index.html</code>. No necesita un campo de entrada; solo tendrá el botón para eliminar la clave del ejercicio.</p>
+    <pre><code>    &lt;section&gt;
+        &lt;h2&gt;Ejercicio 4. Eliminar el nombre guardado&lt;/h2&gt;
+        &lt;form id="formEliminar"&gt;
+            &lt;button type="submit"&gt;Eliminar nombre&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;p id="resultadoEliminar"&gt;&lt;/p&gt;
+    &lt;/section&gt;</code></pre>
+    <p>Por último, conecta el formulario en <code>app.js</code>. <code>removeItem()</code> elimina únicamente la clave usada en estos ejercicios.</p>
+    <pre><code>const formEliminar = document.getElementById("formEliminar");
+const resultadoEliminar = document.getElementById("resultadoEliminar");
+
+formEliminar.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+
+    localStorage.removeItem(claveNombre);
+    resultadoEliminar.textContent = "Nombre eliminado.";
+});</code></pre>
+
+    <h3>3.8. Probar con un objeto</h3>
+
+    <div class="alerta">
+        LocalStorage solo almacena cadenas de texto. Si intentas guardar un objeto, lo convertirá a <code>[object Object]</code>.
+        Para guardar un objeto, primero debes convertirlo a JSON con <code>JSON.stringify()</code>. Para leerlo, utiliza <code>JSON.parse()</code>.
+    </div>
+    <h2>Formulario para registrar una mascota (Objeto)</h2>
+    <pre><code>    &lt;form id="formMascota"&gt;
+        &lt;label for="mascota"&gt;Mascota:&lt;/label&gt;
+        &lt;input type="text" id="mascota" name="mascota"&gt;
+
+        &lt;label for="raza"&gt;Raza:&lt;/label&gt;
+        &lt;input type="text" id="raza" name="raza"&gt;
+
+        &lt;label for="edad"&gt;Edad:&lt;/label&gt;
+        &lt;input type="number" id="edad" name="edad" min="0"&gt;
+
+        &lt;button type="submit"&gt;Guardar mascota&lt;/button&gt;
+    &lt;/form&gt;</code></pre>
+
+    <pre><code>const formMascota = document.getElementById("formMascota");
+
+formMascota.addEventListener("submit", (event) =&gt; {
+    event.preventDefault();
+
+    const mascota = {
+        nombre: document.getElementById("mascota").value,
+        raza: document.getElementById("raza").value,
+        edad: Number(document.getElementById("edad").value)
+    };
+
+    localStorage.setItem("mascota", JSON.stringify(mascota));
+});</code></pre>
+        
+
+    <div class="nota">
+        <strong>Siguiente paso:</strong>
+        después de practicar cada método, construye una aplicación completa para registrar y administrar estudiantes.
+        <a href="proyecto.html">Continuar con el proyecto CRUD de estudiantes paso a paso</a>.
+    </div>
+</section>
+</main>
+
+<footer>
+    Guía de aprendizaje · JavaScript · DOM · LocalStorage
+</footer>
+
+<script>
+    function bloquearPortapapeles(evento) {
+        evento.preventDefault();
+    }
+
+    document.addEventListener("copy", bloquearPortapapeles);
+    document.addEventListener("cut", bloquearPortapapeles);
+    document.addEventListener("paste", bloquearPortapapeles);
+    document.addEventListener("contextmenu", bloquearPortapapeles);
+
+    document.addEventListener("keydown", function (evento) {
+        if ((evento.ctrlKey || evento.metaKey) && ["c", "v", "x"].includes(evento.key.toLowerCase())) {
+            evento.preventDefault();
+        }
+    });
+</script>
+
+</body>
+</html>

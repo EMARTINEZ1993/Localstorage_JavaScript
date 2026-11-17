@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto CRUD de estudiantes con LocalStorage</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Proyecto guiado: CRUD de estudiantes</h1>
+    <p>
+        Construye paso a paso una aplicación para registrar,
+        consultar, editar y eliminar estudiantes con HTML,
+        JavaScript, el DOM y LocalStorage.
+    </p>
+</header>
+
+<nav aria-label="Navegación del proyecto">
+    <a href="index.html">Volver a la guía principal</a>
+    <a href="index.html#metodos">Ejercicios de LocalStorage</a>
+    <a href="#crud">Construcción del CRUD</a>
+</nav>
+
+<main>
+
+
+<!-- ================================================= -->
+<section id="crud">
+
+    <h2>4. Construcción paso a paso: CRUD de estudiantes</h2>
+
+    <p>
+        Ahora vamos a integrar los conceptos anteriores
+        en un proyecto que permita registrar, consultar,
+        actualizar y eliminar estudiantes.
+    </p>
+
+    <h3>4.1. Estructura del proyecto</h3>
+    <p>Crea una carpeta para el proyecto y dentro prepara estos archivos. En los siguientes pasos completarás cada uno en orden.</p>
+
+    <pre><code>crud-localstorage/
+│
+├── index.html
+│
+├── css/
+│   └── style.css
+│
+└── js/
+    └── app.js</code></pre>
+
+    <h3>4.2. Crear el formulario HTML</h3>
+    <p>Abre <code>index.html</code> y, dentro del elemento <code>body</code>, agrega este formulario. Los campos y mensajes de error tienen identificadores que JavaScript utilizará en los pasos posteriores.</p>
+
+    <pre><code>&lt;form id="formulario"&gt;
+
+    &lt;label for="nombre"&gt;Nombre:&lt;/label&gt;
+    &lt;input type="text" id="nombre"&gt;
+    &lt;small id="errorNombre"&gt;&lt;/small&gt;
+
+    &lt;label for="correo"&gt;Correo:&lt;/label&gt;
+    &lt;input type="text" id="correo"&gt;
+    &lt;small id="errorCorreo"&gt;&lt;/small&gt;
+
+    &lt;label for="edad"&gt;Edad:&lt;/label&gt;
+    &lt;input type="number" id="edad"&gt;
+    &lt;small id="errorEdad"&gt;&lt;/small&gt;
+
+    &lt;button type="submit" id="btnGuardar"&gt;
+        Registrar estudiante
+    &lt;/button&gt;
+
+&lt;/form&gt;</code></pre>
+
+    <h3>4.3. Crear la tabla HTML</h3>
+    <p>Debajo del formulario, agrega una tabla con las columnas de cada dato y las acciones. El elemento <code>tbody</code> vacío será el destino de las filas que JavaScript construirá.</p>
+
+    <pre><code>&lt;table&gt;
+
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Nombre&lt;/th&gt;
+            &lt;th&gt;Correo&lt;/th&gt;
+            &lt;th&gt;Edad&lt;/th&gt;
+            &lt;th&gt;Acciones&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody id="tablaEstudiantes"&gt;&lt;/tbody&gt;
+
+&lt;/table&gt;</code></pre>
+
+<h3>4.4. Crear las variables y el estado del proyecto</h3>
+<p>En <code>js/app.js</code>, conecta los elementos que creaste en el HTML y prepara el arreglo que guardará los estudiantes. El índice <code>-1</code> indica que el formulario agregará un registro nuevo; un índice distinto se usará al editar.</p>
+<pre><code>// 1. VARIABLES Y ESTADO
+let formulario = document.getElementById(&quot;formulario&quot;);
+
+let nombre = document.getElementById(&quot;nombre&quot;);
+let correo = document.getElementById(&quot;correo&quot;);
+let edad = document.getElementById(&quot;edad&quot;);
+
+let errorNombre = document.getElementById(&quot;errorNombre&quot;);
+let errorCorreo = document.getElementById(&quot;errorCorreo&quot;);
+let errorEdad = document.getElementById(&quot;errorEdad&quot;);
+
+let tabla = document.getElementById(&quot;tablaEstudiantes&quot;);
+let btnGuardar = document.getElementById(&quot;btnGuardar&quot;);
+
+let listaEstudiantes = [];
+
+// Variable para controlar la edici&#243;n
+let indiceEditar = -1;</code></pre>
+
+<h3>4.5. Validar el nombre</h3>
+<p>Agrega esta función después de las variables. Comprueba que el nombre no esté vacío y tenga al menos tres caracteres; el evento <code>input</code> la ejecuta mientras se escribe.</p>
+<pre><code>// 2. VALIDAR NOMBRE
+
+function validarNombre() {
+
+    let nombreEstudiante = nombre.value.trim();
+
+    if (nombreEstudiante === &quot;&quot;) {
+        errorNombre.textContent = &quot;Escribe el nombre del estudiante.&quot;;
+        return false;
+    }
+    else if (nombreEstudiante.length &lt; 3) {
+        errorNombre.textContent = &quot;El nombre debe tener m&#237;nimo 3 caracteres.&quot;;
+        return false;
+    }
+    else{
+        errorNombre.textContent = &quot;&quot;;
+        return true;
+    }
+
+}
+
+nombre.addEventListener(&quot;input&quot;, validarNombre);</code></pre>
+
+<h3>4.6. Validar el correo</h3>
+<p>A continuación, agrega la validación del correo. La expresión regular verifica un formato básico y el evento <code>input</code> actualiza el mensaje mientras se escribe.</p>
+<pre><code>// 3. VALIDAR CORREO
+
+function validarCorreo() {
+
+    let correoEstudiante = correo.value.trim();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoEstudiante)) {
+        errorCorreo.textContent = &quot;Escribe un correo v&#225;lido.&quot;;
+        return false;
+    }
+    else{
+        errorCorreo.textContent = &quot;&quot;;
+        return true;
+    }
+
+}
+
+correo.addEventListener(&quot;input&quot;, validarCorreo);</code></pre>
+
+<h3>4.7. Validar la edad</h3>
+<p>Agrega la validación de edad. Solo se acepta un número entero mayor que cero; más adelante esta misma función se ejecutará otra vez al enviar el formulario.</p>
+<pre><code>// 4. VALIDAR EDAD
+function validarEdad() {
+
+    let edadEstudiante = Number(edad.value);
+
+    if (edad.value.trim() === &quot;&quot; || !Number.isInteger(edadEstudiante) || edadEstudiante &lt;= 0) {
+        errorEdad.textContent = &quot;Escribe una edad entera mayor que cero.&quot;;
+        return false;
+    }
+    else{
+        errorEdad.textContent = &quot;&quot;;
+        return true;
+    }
+
+}
+
+edad.addEventListener(&quot;input&quot;, validarEdad);</code></pre>
+
+<h3>4.8. Conectar el envío del formulario</h3>
+<p>Conecta el formulario al evento <code>submit</code>. Al enviarlo, el navegador llamará a <code>registrarEstudiante</code>, cuya función construirás en el siguiente paso.</p>
+<pre><code>// 5. EVENTO DEL FORMULARIO
+
+formulario.addEventListener(&quot;submit&quot;, registrarEstudiante);</code></pre>
+
+<h3>4.9. Registrar o actualizar un estudiante</h3>
+<p>Agrega esta función después de conectar el evento. Primero evita que el formulario recargue la página, valida los campos y crea el objeto. Si no hay una edición activa lo agrega; de lo contrario, reemplaza el registro seleccionado. Finalmente persiste el arreglo y actualiza la tabla.</p>
+<pre><code>// 6. REGISTRAR Y ACTUALIZAR ESTUDIANTE
+
+function registrarEstudiante(event) {
+
+    event.preventDefault();
+
+    // Validar los campos antes de registrar
+    let nombreValido = validarNombre();
+    let correoValido = validarCorreo();
+    let edadValida = validarEdad();
+
+    if (!nombreValido || !correoValido || !edadValida) {
+        return;
+    }
+
+    // Obtener los valores de los campos
+    let nombreEstudiante = nombre.value.trim();
+    let correoEstudiante = correo.value.trim().toLowerCase();
+    let edadEstudiante = Number(edad.value);
+
+    // Crear el objeto del estudiante
+    let estudiante = {
+        nombre: nombreEstudiante,
+        correo: correoEstudiante,
+        edad: edadEstudiante
+    };
+
+    // Verificar si se est&#225; editando un estudiante
+    if (indiceEditar === -1) {
+
+        // Agregar un nuevo estudiante al arreglo
+        listaEstudiantes.push(estudiante);
+
+    } else {
+
+        // Actualizar el estudiante seleccionado
+        listaEstudiantes[indiceEditar] = estudiante;
+
+        indiceEditar = -1;
+
+    }
+
+    // Guardar los datos y actualizar la tabla
+    localStorage.setItem(&quot;estudiantes&quot;, JSON.stringify(listaEstudiantes));
+
+    mostrarEstudiantes();
+
+    // Limpiar el formulario
+    formulario.reset();
+
+    // Limpiar los mensajes de error
+    errorNombre.textContent = &quot;&quot;;
+    errorCorreo.textContent = &quot;&quot;;
+    errorEdad.textContent = &quot;&quot;;
+
+    // Restaurar el texto del bot&#243;n
+    btnGuardar.textContent = &quot;Registrar estudiante&quot;;
+
+}</code></pre>
+
+<h3>4.10. Mostrar los estudiantes en la tabla</h3>
+<p>Agrega la función que dibuja el arreglo en el <code>tbody</code>. En cada actualización, limpia las filas anteriores y crea una fila por estudiante, con botones vinculados a las acciones correspondientes.</p>
+<pre><code>// 7. MOSTRAR ESTUDIANTES EN LA TABLA
+function mostrarEstudiantes() {
+    tabla.innerHTML = &quot;&quot;;
+
+    for (let i = 0; i &lt; listaEstudiantes.length; i++) {
+
+        // Agregar una fila por cada estudiante
+        tabla.innerHTML += `
+            &lt;tr&gt;
+                &lt;td&gt;${listaEstudiantes[i].nombre}&lt;/td&gt;
+                &lt;td&gt;${listaEstudiantes[i].correo}&lt;/td&gt;
+                &lt;td&gt;${listaEstudiantes[i].edad}&lt;/td&gt;
+                &lt;td&gt;
+                    &lt;button onclick=&quot;editarEstudiante(${i})&quot;&gt;
+                        Editar
+                    &lt;/button&gt;
+                &lt;/td&gt;
+                &lt;td&gt;
+                    &lt;button onclick=&quot;eliminarEstudiante(${i})&quot;&gt;
+                        Eliminar
+                    &lt;/button&gt;
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        `;
+
+    }
+
+}</code></pre>
+
+<h3>4.11. Editar un estudiante</h3>
+<p>Agrega esta función para cargar en el formulario los datos de la fila seleccionada. Guardar su índice permite que el envío del formulario actualice ese mismo objeto en lugar de agregar otro.</p>
+<pre><code>// 8. EDITAR ESTUDIANTE
+
+function editarEstudiante(indice) {
+
+    // Cargar los datos del estudiante en los inputs
+    nombre.value = listaEstudiantes[indice].nombre;
+    correo.value = listaEstudiantes[indice].correo;
+    edad.value = listaEstudiantes[indice].edad;
+
+    // Guardar la posici&#243;n del estudiante seleccionado
+    indiceEditar = indice;
+
+    // Cambiar el texto del bot&#243;n
+    btnGuardar.textContent = &quot;Actualizar estudiante&quot;;
+
+}
+</code></pre>
+
+<h3>4.12. Eliminar un estudiante</h3>
+<p>Agrega la función de eliminación. Quita el elemento con <code>splice()</code>, persiste el arreglo y vuelve a dibujar la tabla. También limpia la edición si se elimina ese registro o ajusta el índice si se elimina una fila anterior.</p>
+<pre><code>// 9. ELIMINAR ESTUDIANTE
+
+
+function eliminarEstudiante(indice) {
+
+    // Eliminar el estudiante del arreglo
+    listaEstudiantes.splice(indice, 1);
+
+    // Guardar los cambios y actualizar la tabla
+    localStorage.setItem(&quot;estudiantes&quot;, JSON.stringify(listaEstudiantes));
+    mostrarEstudiantes();
+
+    // Si se elimina el estudiante que se estaba editando
+    if (indiceEditar === indice) {
+
+        indiceEditar = -1;
+
+        formulario.reset();
+
+        btnGuardar.textContent = &quot;Registrar estudiante&quot;;
+
+        errorNombre.textContent = &quot;&quot;;
+        errorCorreo.textContent = &quot;&quot;;
+        errorEdad.textContent = &quot;&quot;;
+
+    }
+
+    // Si se elimina un registro anterior al que se edita
+    else if (indiceEditar &gt; indice) {
+
+        indiceEditar--;
+
+    }
+}
+</code></pre>
+
+<h3>4.13. Cargar los datos al iniciar</h3>
+<p>Por último, agrega este bloque al final de <code>js/app.js</code>. Recupera los datos al abrir o recargar la página; si la clave existe, convierte el JSON en arreglo y luego muestra los registros.</p>
+<pre><code>// 10. CARGAR DATOS AL INICIAR
+// ==========================================
+
+// Consultar los estudiantes guardados
+let datosGuardados = localStorage.getItem(&quot;estudiantes&quot;);
+
+// Verificar si existen datos almacenados
+if (datosGuardados !== null) {
+
+    listaEstudiantes = JSON.parse(datosGuardados);
+
+}
+
+// Mostrar los estudiantes en la tabla
+mostrarEstudiantes();</code></pre>
+
+    </section>
+
+
+</main>
+
+<footer>
+    Guía de aprendizaje · JavaScript · DOM · LocalStorage
+</footer>
+
+<script>
+    function bloquearPortapapeles(evento) {
+        evento.preventDefault();
+    }
+
+    document.addEventListener("copy", bloquearPortapapeles);
+    document.addEventListener("cut", bloquearPortapapeles);
+    document.addEventListener("paste", bloquearPortapapeles);
+    document.addEventListener("contextmenu", bloquearPortapapeles);
+
+    document.addEventListener("keydown", function (evento) {
+        if ((evento.ctrlKey || evento.metaKey) && ["c", "v", "x"].includes(evento.key.toLowerCase())) {
+            evento.preventDefault();
+        }
+    });
+</script>
+
+</body>
+</html>
