@@ -1,0 +1,230 @@
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5fa;
+            color: #263248;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #193765;
+            color: white;
+            padding: 45px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header p {
+            max-width: 750px;
+            margin: 12px auto;
+        }
+
+        nav {
+            background: white;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2457a7;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        main {
+            max-width: 1050px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 12px #00000008;
+        }
+
+        h2 {
+            color: #193765;
+            border-bottom: 2px solid #e4eaf4;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2457a7;
+            margin-top: 25px;
+        }
+
+        .nota {
+            background: #eaf1ff;
+            border-left: 4px solid #2457a7;
+            padding: 12px;
+            margin: 15px 0;
+        }
+
+        .alerta {
+            background: #fff4df;
+            border-left: 4px solid #d99524;
+            padding: 12px;
+            margin: 15px 0;
+        }
+
+        .ejercicio {
+            background: #f8faff;
+            border: 1px solid #dce5f2;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 18px 0;
+        }
+
+        pre {
+            background: #172235;
+            color: #e9f0ff;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        code {
+            background: #edf1f8;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #b13c54;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc8d9;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #2457a744;
+            border-color: #2457a7;
+        }
+
+        input.invalido {
+            border: 2px solid #d33;
+        }
+
+        input.valido {
+            border: 2px solid #16834a;
+        }
+
+        button {
+            background: #2457a7;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 12px;
+            margin-right: 5px;
+        }
+
+        button:hover {
+            opacity: .85;
+        }
+
+        button.eliminar {
+            background: #c43b3b;
+        }
+
+        button.editar {
+            background: #16834a;
+        }
+
+        button.secundario {
+            background: #64748b;
+        }
+
+        .resultado {
+            background: #edf2f8;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            min-height: 40px;
+            overflow-wrap: anywhere;
+        }
+
+        .mensaje {
+            font-size: 13px;
+            color: #c43b3b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+
+        th, td {
+            border: 1px solid #dce3ed;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #eaf1ff;
+            color: #193765;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        footer {
+            background: #193765;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        @media(max-width:600px) {
+            header h1 {
+                font-size: 25px;
+            }
+
+            section {
+                padding: 17px;
+            }
+
+            nav {
+                justify-content: flex-start;
+            }
+        }

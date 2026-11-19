@@ -149,10 +149,10 @@
 
     &lt;section&gt;
         &lt;h2&gt;Ejercicio 1. Guardar un nombre&lt;/h2&gt;
-        &lt;form id="formGuardar"&gt;
-            &lt;label for="nombreGuardar"&gt;Nombre:&lt;/label&gt;
-            &lt;input id="nombreGuardar" type="text"&gt;
-            &lt;button type="submit"&gt;Guardar nombre&lt;/button&gt;
+        &lt;form action=""&gt;
+            &lt;label for=""&gt;Nombre:&lt;/label&gt;
+            &lt;input type="text" id="nombreGuardar"&gt;
+            &lt;button type="button" onclick="guardarNombre()"&gt;Guardar Nombre&lt;/button&gt;
         &lt;/form&gt;
         &lt;p id="resultadoGuardar"&gt;&lt;/p&gt;
     &lt;/section&gt;
@@ -162,54 +162,64 @@
 &lt;/html&gt;</code></pre>
 
     <h3>3.3. Preparar app.js</h3>
-    <p>En <code>localstorage_explicacion/app.js</code>, define una clave y conecta cada formulario, campo y mensaje con JavaScript.</p>
+    <p>En <code>localstorage_explicacion/app.js</code>, define la clave de los ejercicios de edición y eliminación, y conecta los campos y mensajes con JavaScript.</p>
     <pre><code>const claveNombre = "localstorage_explicacion_nombre";
 
-const formGuardar = document.getElementById("formGuardar");
 const nombreGuardar = document.getElementById("nombreGuardar");
 const resultadoGuardar = document.getElementById("resultadoGuardar");</code></pre>
-    <p>La misma clave se utiliza en los cuatro ejercicios para que consultar, editar y eliminar operen sobre el dato guardado.</p>
+    <p>Los ejercicios 1 y 2 utilizan la clave <code>Nombre</code> para guardar y mostrar una lista. Los ejercicios 3 y 4 usan <code>claveNombre</code> para editar y eliminar un dato independiente.</p>
 
     <h3>3.4. Ejercicio 1: guardar un campo</h3>
-    <p>Conecta el primer formulario al evento <code>submit</code>. <code>setItem()</code> guarda el texto usando la clave definida anteriormente.</p>
-    <pre><code>formGuardar.addEventListener("submit", function (evento) {
-    evento.preventDefault();
+    <p>El botón llama a <code>guardarNombre()</code>. La función agrega cada nombre a una lista JSON almacenada bajo la clave <code>Nombre</code>.</p>
+    <pre><code>function guardarNombre(){
 
-    const nombre = nombreGuardar.value.trim();
-    if (nombre === "") {
-        resultadoGuardar.textContent = "Escribe un nombre antes de guardarlo.";
+    let nombre = document.getElementById("nombreGuardar").value.trim();
+
+    if(nombre === ""){
+        alert("Por favor ingrese el nombre");
+        return;
+    }else{
+        let listaNombres = JSON.parse(localStorage.getItem("Nombre")) || [];
+        listaNombres.push(nombre);
+
+        localStorage.setItem("Nombre", JSON.stringify(listaNombres));
+
+        document.getElementById("nombreGuardar").value = "";
+        document.getElementById("resultadoGuardar").innerText = `Nombre guardado ${nombre}`;
+    }
+}</code></pre>
+    <p>Como el botón es de tipo <code>button</code>, no envía el formulario. Los nombres se guardan como una lista JSON en LocalStorage.</p>
+
+    <h3>3.5. Ejercicio 2: mostrar los nombres guardados</h3>
+    <p>Agrega este segundo formulario a <code>index.html</code>. No necesita un campo de entrada: el botón llama a la función que mostrará el nombre guardado.</p>
+    <pre><code>    &lt;section&gt;
+        &lt;h2&gt;Ejercicio 2: Mostrar los nombres guardados&lt;/h2&gt;
+        &lt;form action=""&gt;
+            &lt;button type="button" onclick="mostrarNombre()"&gt;&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;ul id="resultadoMostrar"&gt;&lt;/ul&gt;
+    &lt;/section&gt;</code></pre>
+
+    <p>Ahora agrega en <code>app.js</code> la función que consulta la lista con <code>getItem()</code> y agrega cada nombre al elemento de lista.</p>
+    <pre><code>function mostrarNombre() {
+    let listaNombres = JSON.parse(localStorage.getItem("Nombre")) || [];
+    let resultado = document.getElementById("resultadoMostrar");
+    resultado.textContent = "";
+
+    if (listaNombres.length === 0) {
+        const item = document.createElement("li");
+        item.textContent = "No hay nombres guardados";
+        resultado.appendChild(item);
         return;
     }
 
-    localStorage.setItem(claveNombre, nombre);
-    resultadoGuardar.textContent = "Nombre guardado correctamente.";
-    formGuardar.reset();
-});</code></pre>
-    <p><code>preventDefault()</code> evita que el formulario recargue la página. <code>trim()</code> quita espacios al inicio y al final.</p>
-
-    <h3>3.5. Ejercicio 2: mostrar el campo guardado</h3>
-    <p>Agrega este segundo formulario a <code>index.html</code>. No necesita un campo de entrada: solo contiene el botón que solicitará el nombre guardado.</p>
-    <pre><code>    &lt;section&gt;
-        &lt;h2&gt;Ejercicio 2. Mostrar el nombre guardado&lt;/h2&gt;
-        &lt;form id="formMostrar"&gt;
-            &lt;button type="submit"&gt;Mostrar nombre&lt;/button&gt;
-        &lt;/form&gt;
-        &lt;p id="resultadoMostrar"&gt;&lt;/p&gt;
-    &lt;/section&gt;</code></pre>
-
-    <p>Ahora agrega en <code>app.js</code> el evento que consulta la clave con <code>getItem()</code> y coloca el resultado en el párrafo.</p>
-    <pre><code>const formMostrar = document.getElementById("formMostrar");
-const resultadoMostrar = document.getElementById("resultadoMostrar");
-
-formMostrar.addEventListener("submit", function (evento) {
-    evento.preventDefault();
-
-    const nombreGuardado = localStorage.getItem(claveNombre);
-    resultadoMostrar.textContent = nombreGuardado === null
-        ? "No hay un nombre guardado."
-        : "Nombre guardado: " + nombreGuardado;
-});</code></pre>
-    <p>Si la clave no existe, <code>getItem()</code> devuelve <code>null</code>; por eso se comprueba antes de mostrar el resultado.</p>
+    listaNombres.forEach(function (nombre) {
+        const item = document.createElement("li");
+        item.textContent = nombre;
+        resultado.appendChild(item);
+    });
+}</code></pre>
+    <p>Los nombres se agregan como texto a elementos de lista para evitar interpretar su contenido como HTML.</p>
 
     <h3>3.6. Ejercicio 3: editar el campo guardado</h3>
     <p>Agrega a <code>index.html</code> un tercer formulario con un campo para escribir el nuevo nombre. Mantén el campo dentro del formulario.</p>
